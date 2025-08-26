@@ -38,6 +38,25 @@ header p {
     color: #666;
 }
 
+.forms-blurb {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(30, 60, 114, 0.1);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.forms-blurb a {
+    color: #1e3c72;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.forms-blurb a:hover {
+    text-decoration: underline;
+}
+
 .chat-container {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 10px;

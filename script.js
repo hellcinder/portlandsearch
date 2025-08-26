@@ -1,5 +1,36 @@
 class PortlandRevenueChatbot {
     constructor() {
+        this.taxForms = {
+            artsTax: {
+                main: "https://www.portland.gov/revenue/forms/arts-tax",
+                filing: "https://www.portland.gov/revenue/arts-tax/file-and-pay-your-arts-tax",
+                forms: {
+                    "Address Change": "https://www.portland.gov/revenue/documents/arts-tax-address-change-form",
+                    "Refund Request": "https://www.portland.gov/revenue/documents/arts-tax-refund-request",
+                    "Penalty Waiver": "https://www.portland.gov/revenue/documents/arts-tax-penalty-waiver-request",
+                    "Permanent Exemption": "https://www.portland.gov/revenue/documents/arts-tax-permanent-filing-exemption-request"
+                }
+            },
+            businessTax: {
+                main: "https://www.portland.gov/revenue/forms/business-taxes",
+                forms: {
+                    "Registration Form": "https://www.portland.gov/revenue/documents/business-tax-registration-form-fill-print/download",
+                    "Out of Business Notice": "https://www.portland.gov/revenue/documents/out-business-notification-form/download",
+                    "Tax Authorization": "https://www.portland.gov/revenue/documents/tax-information-authorization-and-power-attorney-representation-form/download",
+                    "Extension Request": "https://www.portland.gov/revenue/forms/business-taxes",
+                    "Payment Voucher": "https://www.portland.gov/revenue/forms/business-taxes"
+                }
+            },
+            general: {
+                allForms: "https://www.portland.gov/revenue/forms",
+                contact: {
+                    arts: "ArtsTaxHelp@portlandoregon.gov",
+                    business: "biztaxhelp@portlandoregon.gov",
+                    phone: "503-823-5157"
+                }
+            }
+        };
+        
         this.revenueData = {
             businessTax: {
                 name: "Business License (Income) Tax",
@@ -73,6 +104,11 @@ class PortlandRevenueChatbot {
                    "Contact: ArtsTaxHelp@portlandoregon.gov or 503-865-4278";
         }
         
+        // Tax forms and documents
+        if (lowerMessage.includes('form') || (lowerMessage.includes('where') && (lowerMessage.includes('get') || lowerMessage.includes('find'))) || lowerMessage.includes('download')) {
+            return this.getFormsResponse(lowerMessage);
+        }
+        
         // Tax due dates and deadlines
         if (lowerMessage.includes('when') && (lowerMessage.includes('due') || lowerMessage.includes('deadline'))) {
             return "<strong>Portland Tax Due Dates:</strong><br><br>" +
@@ -107,7 +143,7 @@ class PortlandRevenueChatbot {
             return "Hello! I'm here to help with Portland revenue information. You can ask about business taxes, arts tax, clean energy surcharge, hotel taxes, or general budget information.";
         }
         
-        return "I can help you with information about Portland's revenue sources including Business License Tax, Arts Tax, Clean Energy Surcharge, Transient Lodgings Tax, and budget information. You can also ask basic questions like 'Do I have to pay taxes?' or 'When are taxes due?'";
+        return "I can help you with information about Portland's revenue sources including Business License Tax, Arts Tax, Clean Energy Surcharge, Transient Lodgings Tax, and budget information. You can also ask basic questions like 'Do I have to pay taxes?', 'When are taxes due?', or 'Where can I get tax forms?'";
     }
     
     formatResponse(data) {
@@ -125,6 +161,38 @@ class PortlandRevenueChatbot {
         }
         
         return response;
+    }
+    
+    getFormsResponse(message) {
+        const lowerMessage = message.toLowerCase();
+        
+        if (lowerMessage.includes('arts') && lowerMessage.includes('form')) {
+            return "<strong>Arts Tax Forms:</strong><br><br>" +
+                   "• <a href='" + this.taxForms.artsTax.filing + "' target='_blank'>File & Pay Arts Tax Online</a><br>" +
+                   "• <a href='" + this.taxForms.artsTax.forms['Address Change'] + "' target='_blank'>Address Change Form</a><br>" +
+                   "• <a href='" + this.taxForms.artsTax.forms['Refund Request'] + "' target='_blank'>Refund Request Form</a><br>" +
+                   "• <a href='" + this.taxForms.artsTax.forms['Penalty Waiver'] + "' target='_blank'>Penalty Waiver Request</a><br>" +
+                   "• <a href='" + this.taxForms.artsTax.forms['Permanent Exemption'] + "' target='_blank'>Permanent Filing Exemption</a><br><br>" +
+                   "Forms available in 10+ languages. Contact: " + this.taxForms.general.contact.arts;
+        }
+        
+        if (lowerMessage.includes('business') && lowerMessage.includes('form')) {
+            return "<strong>Business Tax Forms:</strong><br><br>" +
+                   "• <a href='" + this.taxForms.businessTax.forms['Registration Form'] + "' target='_blank'>Business Registration Form</a><br>" +
+                   "• <a href='" + this.taxForms.businessTax.forms['Out of Business Notice'] + "' target='_blank'>Out of Business Notification</a><br>" +
+                   "• <a href='" + this.taxForms.businessTax.forms['Tax Authorization'] + "' target='_blank'>Tax Information Authorization</a><br>" +
+                   "• <a href='" + this.taxForms.businessTax.main + "' target='_blank'>All Business Tax Forms</a><br><br>" +
+                   "Contact: " + this.taxForms.general.contact.business + " or " + this.taxForms.general.contact.phone;
+        }
+        
+        // General forms request
+        return "<strong>Portland Tax Forms:</strong><br><br>" +
+               "• <a href='" + this.taxForms.artsTax.main + "' target='_blank'>Arts Tax Forms</a><br>" +
+               "• <a href='" + this.taxForms.businessTax.main + "' target='_blank'>Business Tax Forms</a><br>" +
+               "• <a href='" + this.taxForms.general.allForms + "' target='_blank'>All Revenue Forms</a><br><br>" +
+               "<strong>Quick Links:</strong><br>" +
+               "• <a href='" + this.taxForms.artsTax.filing + "' target='_blank'>File Arts Tax Online</a><br><br>" +
+               "<strong>Note:</strong> Download forms to your computer, then open in Adobe Acrobat Reader to complete.";
     }
 }
 
